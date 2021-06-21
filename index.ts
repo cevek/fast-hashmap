@@ -12,6 +12,13 @@ export const createHashMap = <T>(capacity = 8): HashMap<T> => {
         v: Array(capacity),
     };
 };
+export const clone = <T>(hashMap: HashMap<T>): HashMap<T> => {
+    return {
+        s: hashMap.s,
+        k: hashMap.k.slice(),
+        v: hashMap.v.slice(),
+    };
+};
 
 export const get = <T>(hashMap: HashMap<T>, key: number): T | undefined => {
     if (key === 0) key = -1073741824;

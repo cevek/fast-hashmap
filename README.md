@@ -7,6 +7,7 @@
 - get - 5.5x
 - remove - 13x
 - iterate - 3.6x
+- clone - 12x
 
 ## Limitations
 - only integer keys
