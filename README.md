@@ -8,4 +8,9 @@
 - remove - 13x
 - iterate - 3.6x
 
+## Limitations
+- only integer keys
+- key range -(2^30 + 1) .. (2^30 - 1)
+
 ## Size - 1kb(0.5kb gzip)
+
