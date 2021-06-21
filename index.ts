@@ -104,6 +104,12 @@ export const remove = <T>(hashMap: HashMap<T>, key: number) => {
     }
 };
 
+export const clear = <T>(hashMap: HashMap<T>) => {
+    hashMap.k.fill(0);
+    hashMap.v.fill(void 0);
+    hashMap.s = 0;
+};
+
 const resize = <T>(hashMap2: HashMap<T>, newCapacity: number) => {
     const hm = createHashMap<T>(newCapacity);
     let i = 0,
