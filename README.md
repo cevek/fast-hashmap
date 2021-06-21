@@ -10,8 +10,7 @@
 - clone - 12x
 
 ## Limitations
-- only integer keys
-- key range -(2^30 + 1) .. (2^30 - 1)
+- only Int32 keys
 - unset value is equal undefined
 
 ## Size - 1kb(0.5kb gzip)

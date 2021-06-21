@@ -1,7 +1,7 @@
 import {clear, createHashMap, get, map, remove, set, setAll} from './index.js';
 
 function test(count: number) {
-    const arr = Array.from({length: 10000}, (_, i) => [i, i + 20000] as [number, number]);
+    const arr = Array.from({length: count}, (_, i) => [i, i + 20000] as [number, number]);
     const hm = createHashMap<number>();
     for (const [k, v] of arr) {
         set(hm, k, v);
@@ -53,4 +53,3 @@ test(64);
 test(100);
 test(1000);
 test(10000);
-test(100000);

@@ -21,13 +21,13 @@ export const clone = <T>(hashMap: HashMap<T>): HashMap<T> => {
 };
 
 export const get = <T>(hashMap: HashMap<T>, key: number): T | undefined => {
-    if (key === 0) key = -1073741824;
     let j = 0;
     while (true) {
         const k = (j++ + key) & (hashMap.k.length - 1);
+        const existValue = hashMap.v[k];
+        if (existValue === void 0) return;
         const existKey = hashMap.k[k];
-        if (existKey === key) return hashMap.v[k];
-        if (existKey === 0) return;
+        if (existKey === key) return existValue;
     }
 };
 
@@ -52,19 +52,17 @@ export const setAll = <T>(hashMap: HashMap<T>, data: [number, T][]): void => {
 };
 
 const setWithoutResize = <T>(hashMap: HashMap<T>, key: number, value: T): void => {
-    if (key === 0) key = -1073741824;
     let j = 0;
     while (true) {
         const k = (j++ + key) & (hashMap.k.length - 1);
-        const existKey = hashMap.k[k];
-        if (existKey === key) {
-            hashMap.v[k] = value;
-            break;
-        }
-        if (existKey === 0) {
+        if (hashMap.v[k] === void 0) {
             hashMap.k[k] = key;
             hashMap.v[k] = value;
             hashMap.s++;
+            break;
+        }
+        if (hashMap.k[k] === key) {
+            hashMap.v[k] = value;
             break;
         }
     }
@@ -73,10 +71,10 @@ const setWithoutResize = <T>(hashMap: HashMap<T>, key: number, value: T): void =
 export const forEach = <T>(hashMap: HashMap<T>, fn: (val: T, key: number) => void): void => {
     let j = 0;
     for (let i = 0; j < hashMap.s; i++) {
-        const key = hashMap.k[i];
-        if (key !== 0) {
-            const value = hashMap.v[i]!;
-            fn(value, key === -1073741824 ? 0 : key);
+        const value = hashMap.v[i];
+        if (value !== void 0) {
+            const key = hashMap.k[i];
+            fn(value, key);
             j++;
         }
     }
@@ -92,18 +90,17 @@ export const map = <T, R>(hashMap: HashMap<T>, fn: (val: T, key: number) => R): 
 };
 
 export const remove = <T>(hashMap: HashMap<T>, key: number) => {
-    if (key === 0) key = -1073741824;
     let j = 0;
     while (true) {
         const k = (j++ + key) & (hashMap.k.length - 1);
-        const existKey = hashMap.k[k];
-        if (existKey === key) {
+        if (hashMap.v[k] === void 0) break;
+
+        if (hashMap.k[k] === key) {
             hashMap.v[k] = void 0;
             hashMap.k[k] = 0;
             hashMap.s--;
             break;
         }
-        if (existKey === 0) break;
     }
 };
 
@@ -118,14 +115,14 @@ const resize = <T>(hashMap2: HashMap<T>, newCapacity: number) => {
     let i = 0,
         c = 0;
     while (c < hashMap2.s) {
-        const key = hashMap2.k[i];
-        if (key !== 0) {
-            const value = hashMap2.v[i];
+        const value = hashMap2.v[i];
+        if (value !== void 0) {
+            const key = hashMap2.k[i];
             c++;
             let j = 0;
             while (true) {
                 const k = (j++ + key) & (hm.k.length - 1);
-                if (hm.k[k] === 0) {
+                if (hm.v[k] === void 0) {
                     hm.k[k] = key;
                     hm.v[k] = value;
                     break;
