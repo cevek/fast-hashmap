@@ -19,7 +19,7 @@ export const get = <T>(hashMap: HashMap<T>, key: number): T | undefined => {
     while (true) {
         const k = (j++ + key) & (hashMap.k.length - 1);
         const existKey = hashMap.k[k];
-        if (existKey === key) return hashMap.v[k] as T;
+        if (existKey === key) return hashMap.v[k];
         if (existKey === 0) return;
     }
 };
@@ -63,29 +63,25 @@ const setWithoutResize = <T>(hashMap: HashMap<T>, key: number, value: T): void =
     }
 };
 
-export const map = <T, R>(hashMap: HashMap<T>, fn: (val: T, key: number) => R): R[] => {
-    const newArr = Array(hashMap.s);
-    let j = 0;
-    for (let i = 0; j < hashMap.s; i++) {
-        const key = hashMap.k[i];
-        if (key !== 0) {
-            const value = hashMap.v[i];
-            newArr[j] = fn(value as T, key === -1073741824 ? 0 : key);
-            j++;
-        }
-    }
-    return newArr;
-};
 export const forEach = <T>(hashMap: HashMap<T>, fn: (val: T, key: number) => void): void => {
     let j = 0;
     for (let i = 0; j < hashMap.s; i++) {
         const key = hashMap.k[i];
         if (key !== 0) {
-            const value = hashMap.v[i];
-            fn(value as T, key === -1073741824 ? 0 : key);
+            const value = hashMap.v[i]!;
+            fn(value, key === -1073741824 ? 0 : key);
             j++;
         }
     }
+};
+
+export const map = <T, R>(hashMap: HashMap<T>, fn: (val: T, key: number) => R): R[] => {
+    const newArr = Array(hashMap.s);
+    let i = 0;
+    forEach(hashMap, (v, k) => {
+        newArr[i++] = fn(v, k);
+    });
+    return newArr;
 };
 
 export const remove = <T>(hashMap: HashMap<T>, key: number) => {
