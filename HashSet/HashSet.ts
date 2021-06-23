@@ -52,15 +52,12 @@ const addWithoutResize = (hashSet: HashSet, value: number): void => {
     while (true) {
         const k = (j++ + value) & (hashSet.v.length - 1);
         const existVal = hashSet.v[k];
-        if (existVal === value) {
-            hashSet.v[k] = value;
-            break;
-        }
         if (existVal === void 0) {
             hashSet.v[k] = value;
             hashSet.s++;
             break;
         }
+        if (existVal === value) break;
     }
 };
 
@@ -87,13 +84,12 @@ export const remove = (hashSet: HashSet, value: number) => {
     while (true) {
         const k = (j++ + value) & (hashSet.v.length - 1);
         const existVal = hashSet.v[k];
-        if (existVal === void 0) break;
-
         if (existVal === value) {
             hashSet.v[k] = void 0;
             hashSet.s--;
             break;
         }
+        if (existVal === void 0) break;
     }
 };
 
